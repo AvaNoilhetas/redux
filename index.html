@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Redux</title>
+    <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+  </head>
+  <body>
+    <div>
+      <button id="increaseCounterButton">+</button>
+      <span id="countLabel">0</span>
+      <button id="decreaseCounterButton">-</button>
+    </div>
+
+    <script>
+      const initialState = {
+        count: 0,
+      };
+
+      let store = Redux.createStore(counterReducer);
+
+      // Action
+      function increaseCounter(amount) {
+        return {
+          type: "INCREASE_COUNTER",
+          payload: amount,
+        };
+      }
+
+      function decreaseCounter(amount) {
+        return {
+          type: "DECREASE_COUNTER",
+          payload: amount,
+        };
+      }
+
+      // Reducers
+      function counterReducer(state = initialState, action) {
+        switch (action.type) {
+          case "INCREASE_COUNTER":
+            return {
+              ...state,
+              count: state.count + action.payload,
+            };
+          case "DECREASE_COUNTER":
+            return {
+              ...state,
+              count: state.count - action.payload,
+            };
+          default:
+            return state;
+        }
+      }
+
+      // Dispatch
+      const increaseCounterButton = document.getElementById(
+        "increaseCounterButton"
+      );
+      const decreaseCounterButton = document.getElementById(
+        "decreaseCounterButton"
+      );
+      const countLabel = document.getElementById("countLabel");
+
+      increaseCounterButton?.addEventListener("click", () => {
+        store.dispatch(increaseCounter(1));
+      });
+      decreaseCounterButton?.addEventListener("click", () => {
+        store.dispatch(decreaseCounter(1));
+      });
+
+      // Get state and subscribe
+      const render = () => {
+        // Get state
+        const state = store.getState();
+
+        // Update UI
+        countLabel.innerHTML = state.count;
+      };
+
+      store.subscribe(render);
+    </script>
+  </body>
+</html>
